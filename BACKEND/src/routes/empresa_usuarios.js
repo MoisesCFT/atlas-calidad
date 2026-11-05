@@ -1,6 +1,5 @@
 const express = require("express");
 const { pool } = require("../db");
-const jwt = require("jsonwebtoken");
 const validate = require("../middleware/validate");
 const {
   createEmpresaUsuarioSchema,
@@ -8,18 +7,7 @@ const {
 } = require("../validations/empresa_usuarios");
 
 const router = express.Router();
-const JWT_SECRET = process.env.JWT_SECRET || "inseguro";
-
-function getUserFromAuthHeader(req) {
-  const auth = req.headers.authorization || "";
-  if (!auth.startsWith("Bearer ")) return null;
-  try {
-    const token = auth.substring(7);
-    return jwt.verify(token, JWT_SECRET);
-  } catch {
-    return null;
-  }
-}
+const { JWT_SECRET } = require("../config");
 
 router.post("/", validate(createEmpresaUsuarioSchema), async (req, res) => {
   try {
